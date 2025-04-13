@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 
 import { useState, useEffect, useRef } from "react";
 import type { Sprite as SpriteType } from "../lib/types";
