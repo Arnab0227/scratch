@@ -1,4 +1,4 @@
-import type React from "react"
+import React, { useRef, useEffect } from "react"
 import { useDrag } from "react-dnd"
 import { ArrowRight, RotateCw, MapPin, Repeat, MessageSquare, MessageCircle } from "lucide-react"
 import { nanoid } from "nanoid"
@@ -34,6 +34,7 @@ interface DraggableBlockProps {
 }
 
 function DraggableBlock({ type, label, icon, color }: DraggableBlockProps) {
+  const ref = useRef<HTMLDivElement>(null)
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "BLOCK",
     item: () => {
@@ -76,9 +77,15 @@ function DraggableBlock({ type, label, icon, color }: DraggableBlockProps) {
     }),
   }))
 
+  useEffect(() => {
+    if (ref.current) {
+      drag(ref)
+    }
+  }, [drag])
+
   return (
     <div
-      ref={drag}
+      ref={ref}
       className={`${color} text-white p-3 rounded-lg mb-2 cursor-move flex items-center shadow-sm ${
         isDragging ? "opacity-50" : "opacity-100"
       }`}

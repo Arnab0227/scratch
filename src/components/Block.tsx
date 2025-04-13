@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 import type { Block } from "../lib/types"
 import { useDrag } from "react-dnd"
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
 
 interface BlockProps {
   block: Block
@@ -40,7 +40,11 @@ export default function BlockComponent({
   moveBlock,
 }: BlockProps) {
   const ref = useRef<HTMLDivElement>(null)
-
+  useEffect(() => {
+    if (ref.current) {
+      drag(drop(dropReorder(ref)))
+    }
+  }, [ref])
   const handleUpdate = (updates: Partial<Block>) => {
     const updatedBlock = { ...block, ...updates }
     if (isNested && repeatId && onUpdateRepeatBlock) {
@@ -288,7 +292,7 @@ export default function BlockComponent({
       }`}
     >
       {moveBlock && (
-        <div ref={drag} className="cursor-move mr-2 p-1 hover:bg-white/20 rounded">
+        <div ref={ref} className="cursor-move mr-2 p-1 hover:bg-white/20 rounded">
           <GripVertical className="h-4 w-4" />
         </div>
       )}

@@ -2,6 +2,7 @@ import { useDrop } from "react-dnd"
 import type { Block } from "../lib/types"
 import BlockComponent from "./Block"
 import { useCallback } from "react"
+import { useRef, useEffect } from "react"
 
 interface CodeAreaProps {
   blocks: Block[]
@@ -9,6 +10,7 @@ interface CodeAreaProps {
 }
 
 export default function CodeArea({ blocks, updateBlocks }: CodeAreaProps) {
+  const dropRef = useRef<HTMLDivElement>(null)
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "BLOCK",
     drop: (item: Block) => {
@@ -81,9 +83,14 @@ export default function CodeArea({ blocks, updateBlocks }: CodeAreaProps) {
     [blocks, updateBlocks],
   )
 
+  useEffect(() => {
+    if (dropRef.current) {
+      drop(dropRef)
+    }
+  }, [drop])
   return (
     <div
-      ref={drop}
+      ref={dropRef}
       className={`min-h-[300px] p-4 rounded-lg border-2 ${isOver ? "border-blue-500 bg-blue-50" : "border-gray-200"}`}
     >
       {blocks.length === 0 ? (
